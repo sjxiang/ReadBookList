@@ -22,12 +22,23 @@ class Book(db.Model):
     type = db.Column(db.String(20))   # 类型
 
 
+@app.context_processor
+def inject_user():
+    user = User.query.first()
+    return dict(user=user)
 
 @app.route("/")
 def index():
-    user = User.query.first()
+    # user = User.query.first()
     books = Book.query.all()
-    return render_template("index.html", user=user, books=books)
+    return render_template("index.html", books=books)
+
+
+@app.errorhandler(404) # 传入要处理的错误代码
+def page_not_found(e): # 接受异常对象作为参数
+    # user = User.query.first()
+    return render_template('404.html'), 404 # 返回模板和状态码
+
 
 
 if __name__ == '__main__':
@@ -81,7 +92,14 @@ Flask 微框架
     生成静态文件 url
     添加 Favicon
     
+
+数据库：
+    Pychar有个小 bug
     
+模板优化：
+    自定义错误页面
+    模板上下文处理函数
+    模板继承    
 
     
 
