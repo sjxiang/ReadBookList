@@ -3,7 +3,7 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 
-name = "XSJ"
+name = "Xiangshengjie"
 books = [
     {
         "title": "Writing an Interpreter in Go",
@@ -63,6 +63,16 @@ Flask 微框架
 
 模板渲染：
     {{ 变量|过滤器 }}
+    
+    render_template()
+    
+
+  
+静态文件：
+    生成静态文件 url
+    添加 Favicon
+    
+    
 
     
 

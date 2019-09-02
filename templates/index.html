@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ name }}'s 读书清单</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css">
+
 </head>
 <body>
-    <h2>{{ name }} 读书清单</h2>
+    <h2>
+        <img alt="goo" class="goo" src="{{ url_for('static', filename='images/goo.jpg')}}">
+        {{ name }}'s ReadBookList
+    </h2>
 
     {# 使用 length 过滤器获取 book 变量的长度 #}
-    <p>数量：{{ books|length }}</p>
-    <ul>
+    <p>TODO：{{ books|length }}</p>
+    <ul class="book-list">
         {% for book in books %} {# 迭代 movies 变量 #}
             <li>{{ book.title }} - {{ book.type }}</li>
         {% endfor %}
