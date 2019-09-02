@@ -1,24 +1,33 @@
+import os
+
 from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy  # 导入扩展类  SB bug
 
 app = Flask(__name__)
 
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + os.path.join(app.root_path, "data.db")
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # 关闭对模型修改的监控
+# 在扩展类实例化前加载配置
+db = SQLAlchemy(app)
 
-name = "Xiangshengjie"
-books = [
-    {
-        "title": "Writing an Interpreter in Go",
-        "type": "编译原理"
-    },
-    {
-        "title": "Operating Systems: Three easy pieces",
-        "type": "操作系统"
-    }
-]
+
+class User(db.Model):     # 表名将会是 user（自动生成，小写处理）
+    id = db.Column(db.Integer, primary_key=True)  # 主键
+    name = db.Column(db.String(20))  # 名字
+
+
+class Book(db.Model):
+    id = db.Column(db.Integer, primary_key=True)  # 主键
+    title = db.Column(db.String(60))  # 书名
+    type = db.Column(db.String(20))   # 类型
+
+
 
 @app.route("/")
 def index():
-    return render_template("index.html", name=name, books=books)
-
+    user = User.query.first()
+    books = Book.query.all()
+    return render_template("index.html", user=user, books=books)
 
 
 if __name__ == '__main__':
