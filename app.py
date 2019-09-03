@@ -45,7 +45,7 @@ def index():
 
 
 
-@app.route("/add", methods=["POST"])
+@app.route("/book/add", methods=["POST"])
 def add():
     # 获取表单数据
     title = request.form.get('title')  # 传入表单对应输入字段的 name 值
@@ -65,7 +65,30 @@ def add():
         return redirect(url_for('index'))  # 重定向回主页
 
 
+@app.route('/book/edit/<int:book_id>', methods=['GET', 'POST'])
+def edit(book_id):
+    book = Book.query.get_or_404(book_id)
+    if request.method == 'POST': # 处理编辑表单的提交请求
+        title = request.form['title']
+        type = request.form['type']
+        if not title or not type or len(type) > 4 or len(title) > 60:
+            flash('Invalid input.')
+            return redirect(url_for('edit', book_id=book_id)) # 重定向回对应的编辑页面
+        book.title = title # 更新
+        book.type = type
+        db.session.commit() # 提交数据库会话
+        flash('Item updated.')
+        return redirect(url_for('index')) # 重定向回主页
+    return render_template('edit.html', book=book) # 传入被编辑的电影记录
 
+
+@app.route('/book/delete/<int:book_id>', methods=['POST']) # 限定只接受 POST 请求
+def delete(book_id):
+    book = Book.query.get_or_404(book_id) # 获取电影记录
+    db.session.delete(book) # 删除对应的记录
+    db.session.commit() # 提交数据库会话
+    flash('Item deleted.')
+    return redirect(url_for('index')) # 重定向回主页
 
 
 if __name__ == '__main__':

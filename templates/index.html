@@ -5,14 +5,21 @@
 {# 使用 length 过滤器获取 book 变量的长度 #}
 <p>TODO：{{ books|length }}</p>
 <form method="post" action="{{ url_for('add') }}">
-    Title <input type="text" name="title" autocomplete="off" required>
+    Name <input type="text" name="title" autocomplete="off" required>
     Type <input type="text" name="type" autocomplete="off" required>
     <input class="btn" type="submit" name="submit" value="Add">
 </form>
 
 <ul class="book-list">
     {% for book in books %} {# 迭代 movies 变量 #}
-        <li>{{ book.title }} - {{ book.type }}</li>
+
+        <li>
+            {{ book.title }} - {{ book.type }}
+            <a class="btn" href="{{ url_for('edit', book_id=book.id) }}">Edit</a>
+            <form class="inline-form" method="post" action="{{ url_for('delete', book_id=book.id) }}">
+                <input class="btn" type="submit" name="submit" value="Delete" onclick="return confirm('Are you sure?')">
+            </form>
+        </li>
     {% endfor %}
 </ul>
 {% endblock %}
